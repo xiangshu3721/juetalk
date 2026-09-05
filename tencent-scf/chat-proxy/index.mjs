@@ -1,6 +1,5 @@
-'use strict';
-
 const DEFAULT_ORIGIN = 'https://xiangshu3721.github.io';
+
 const json = (statusCode, body, origin) => ({
   statusCode,
   headers: {
@@ -12,6 +11,7 @@ const json = (statusCode, body, origin) => ({
   },
   body: JSON.stringify(body),
 });
+
 const safeText = (value, limit) => typeof value === 'string' ? value.trim().slice(0, limit) : '';
 const parseBody = (event) => {
   const raw = event?.body || '{}';
@@ -24,7 +24,7 @@ const originFor = (event) => {
 };
 const hasCrisis = (text) => /自杀|自残|不想活|结束生命|伤害自己|伤害他人/.test(text);
 
-exports.main_handler = async (event) => {
+export const main_handler = async (event) => {
   const origin = originFor(event);
   if (event?.httpMethod === 'OPTIONS') return json(204, {}, origin);
   if (event?.httpMethod !== 'POST') return json(405, { error: '仅支持 POST 请求。' }, origin);
