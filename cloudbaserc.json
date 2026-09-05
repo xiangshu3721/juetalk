@@ -1,0 +1,11 @@
+{
+  "envId": "YOUR_CLOUDBASE_ENV_ID",
+  "functionRoot": "cloudfunctions",
+  "functions": [
+    { "name": "chat", "runtime": "Nodejs18.15", "timeout": 20 }
+  ],
+  "hosting": {
+    "public": "dist",
+    "ignore": [".git", "node_modules", "README.md"]
+  }
+}
