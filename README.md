@@ -9,12 +9,12 @@ npm install
 npm run dev
 ```
 
-## 国内上线：腾讯云 CloudBase
+## 上线结构：GitHub Pages + 腾讯云 SCF
 
-1. 在 `cloudbaserc.json` 填入 CloudBase 环境 ID。
-2. 在腾讯云函数 `chat` 的环境变量中设置 `DEEPSEEK_API_KEY`。不要把密钥写入前端、提交 Git 或放进 `.env` 后上传。
-3. 部署函数，并把 HTTP 路径 `/api/chat` 路由到函数 `chat`。
-4. `npm run build` 后部署 `dist` 到静态网站托管。
-5. 为正式访问绑定已备案的自定义域名，并对 `/api/chat` 开启限频。
+1. 先部署 `tencent-scf/chat-proxy`，并在函数环境变量设置 `DEEPSEEK_API_KEY`。不要把密钥写入前端、提交 Git 或放进 `.env` 后上传。
+2. 启用函数 URL 并允许匿名调用。该地址可直接被 GitHub Pages 使用，不需要备案域名。
+3. 在 GitHub 仓库 Variables 设置 `CHAT_API_URL` 为函数 URL。
+4. 在 GitHub 仓库 Settings → Pages 中选择 **GitHub Actions** 作为发布源，推送 `main` 后自动发布。
+5. 为控制公共接口成本，建议在腾讯云函数 URL 上配置限频与告警。
 
-前端将对话请求发到同域 `/api/chat`；DeepSeek API Key 仅在云函数环境中使用。
+前端将对话请求发给 `CHAT_API_URL`；DeepSeek API Key 仅在腾讯云函数环境中使用。

@@ -6,7 +6,8 @@ type Reflection = { id: string; date: string; framework: FrameworkKey; answers: 
 type Screen = "home" | "write" | "dialogue";
 
 const STORAGE_KEY = "juetalk-records-v1";
-const CHAT_ENDPOINT = "/api/chat";
+// 函数 URL 可以公开；DeepSeek Key 只保存在腾讯云函数环境变量中。
+const CHAT_ENDPOINT = (import.meta.env.VITE_CHAT_API_URL as string | undefined) || "";
 
 const sixPrompts = [
   ["省", "今日我要反省的地方有哪些？", "不急着评判，只如实看见。"],
@@ -84,6 +85,7 @@ export default function App() {
   }
   async function ask(text: string) {
     if (!selected || !text.trim() || isThinking) return;
+    if (!CHAT_ENDPOINT) return alert("深入对话服务还在配置中，请稍后再试。");
     setMessage(""); setIsThinking(true);
     try {
       const response = await fetch(CHAT_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ record: selected, message: text.trim() }) });
